@@ -219,7 +219,11 @@ export <%= container['name'] %>_volumes="<%= Array(container['volumes']).join(',
 
 <% unless container['bind_volumes'].nil? || container['bind_volumes'].empty? %>
 # Create a bind mount to a directory
-export <%= container['name'] %>_bind_volumes="<%= Array(container['bind_volumes']).join(',').split(',').map { |vol| "--volume=${CONTAINERS_STORE_DIR}/#{container['name']}:#{vol}" }.join(' ') %>"
+
+export <%= container['name'] %>_bind_volumes="<%= Array(container['bind_volumes']).join(',').split(',').map { |vol| "--volume=${CONTAINERS_STORE_DIR}/#{container['name']}#{vol}:#{vol}" }.join(' ') %>"
+mkdir -p  <%= Array(container['bind_volumes']).join(',').split(',').map { |vol| "${CONTAINERS_STORE_DIR}/#{container['name']}#{vol}" }.join(' ') %>
+
+
 <% end %>
 
 <% unless container['volumes_from'].nil? || container['volumes_from'].empty? %>
